@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="GLPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HColorArea.cpp">
+      <Filter>Source Files\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="SVColorArea.cpp">
+      <Filter>Source Files\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerDialog.cpp">
+      <Filter>Source Files\Uitls</Filter>
+    </ClCompile>
+    <ClCompile Include="IconFontHelper.cpp">
+      <Filter>Source Files\Uitls</Filter>
+    </ClCompile>
+    <ClCompile Include="GLMusicPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLMusicLogo.cpp">
+      <Filter>Source Files\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GLMusicToolBar.cpp">
+      <Filter>Source Files\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GLMusicInfo.cpp">
+      <Filter>Source Files\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GLLabelButton.cpp">
+      <Filter>Source Files\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GLPlayerToolBar.cpp">
+      <Filter>Source Files\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GLPlaySlider.cpp">
+      <Filter>Source Files\Widgets</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files\Widgets">
+      <UniqueIdentifier>{f00359d5-aabb-410a-acde-d2d769720b3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Widgets">
+      <UniqueIdentifier>{7da1d0e5-abb0-49c9-8c30-920a71656db2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Uitls">
+      <UniqueIdentifier>{2ef10c96-bb7d-41d6-9d18-2695d5e34026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Uitls">
+      <UniqueIdentifier>{11d5d94c-c37c-403b-af9d-8d1760e50dad}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="GLPlayer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="HColorArea.h">
+      <Filter>Header Files\Widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="SVColorArea.h">
+      <Filter>Header Files\Widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="PlayerDialog.h">
+      <Filter>Header Files\Uitls</Filter>
+    </QtMoc>
+    <QtMoc Include="IconFontHelper.h">
+      <Filter>Header Files\Uitls</Filter>
+    </QtMoc>
+    <QtMoc Include="GLMusicPlayer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="GLMusicLogo.h">
+      <Filter>Header Files\Widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="GLMusicToolBar.h">
+      <Filter>Header Files\Widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="GLMusicInfo.h">
+      <Filter>Header Files\Widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="GLLabelButton.h">
+      <Filter>Header Files\Widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="GLPlayerToolBar.h">
+      <Filter>Header Files\Widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="GLPlaySlider.h">
+      <Filter>Header Files\Widgets</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="GLPlayer.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="GLPlayer.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+</Project>
