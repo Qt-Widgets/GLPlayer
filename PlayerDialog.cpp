@@ -1,26 +1,34 @@
 #include <QPainter>
 #include <QFont>
+#include <QPaintEvent>
 #include "IconFontHelper.h"
 #include "SVColorArea.h"
 #include "HColorArea.h"
 #include "PlayerDialog.h"
 #include "GLPlaySlider.h"
 #include "GLLabelButton.h"
+#include "OpenFileDialog.h"
 
 PlayerDialog::PlayerDialog(DialogType::Type type, QWidget *parent) : QDialog(parent)
 {
 	setWindowFlag(Qt::FramelessWindowHint);
 	setAttribute(Qt::WA_TranslucentBackground);
-
 	setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 
-	switch (type)
+	m_type = type;
+	switch (m_type)
 	{
 	case DialogType::COLOR:
 		this->ColorDialog();
 		break;
 	case DialogType::VOL:
 		this->VolDialog();
+		break;
+	case DialogType::LIST:
+		this->ListDialog();
+		break;
+	case DialogType::FILE:
+		this->FileDialog();
 		break;
 	}
 }
@@ -68,6 +76,13 @@ PlayerDialog::~PlayerDialog()
 		delete lab_vol;
 		lab_vol = nullptr;
 	}
+
+	//文件选择器
+	if (file_dialog)
+	{
+		delete file_dialog;
+		file_dialog = nullptr;
+	}
 }
 
 void PlayerDialog::ColorDialog()
@@ -75,7 +90,8 @@ void PlayerDialog::ColorDialog()
 	this->resize(303, 270);
 
 	h_layout = new QHBoxLayout(this);
-	h_layout->setContentsMargins(7, 0, 0, 0);
+	h_layout->setMargin(0);
+	h_layout->setSpacing(0);
 
 	sv_color = new SVColorArea;
 	h_color = new HColorArea;
@@ -88,7 +104,7 @@ void PlayerDialog::ColorDialog()
 	connect(h_color, &HColorArea::hueChangedSignal, sv_color, &SVColorArea::hueChangedSlot);
 	connect(sv_color, &SVColorArea::svChangedSignal, this, [=](int h, int s, int v) {
 		QColor color = QColor::fromHsv(h, s, v);
-		emit colorChangedSignal(color.name());
+		emit color_changed_signal(color.name());
 	});
 
 }
@@ -117,7 +133,7 @@ void PlayerDialog::VolDialog()
 
 	this->setLayout(g_layout);
 
-	//设置焦点
+	//设置焦点代理
 	lab_vol->setFocusProxy(this);
 	slider->setFocusProxy(this);
 
@@ -126,16 +142,35 @@ void PlayerDialog::VolDialog()
 	connect(lab_vol, &GLLabelButton::clicked, this, [=]() { lab_vol->setText("000"); slider->setValue(0); });
 }
 
+void PlayerDialog::FileDialog()
+{
+	h_layout = new QHBoxLayout(this);
+	file_dialog = new OpenFileDialog(this);
+	h_layout->addWidget(file_dialog);
+	this->setLayout(h_layout);
+
+	connect(file_dialog, &OpenFileDialog::OpenFile_Signal, this, &PlayerDialog::color_changed_signal);
+}
+
+void PlayerDialog::ListDialog()
+{
+
+}
+
 void PlayerDialog::focusOutEvent(QFocusEvent *event)
 {
-	if (isVisible())
-		this->hide();
+	if (m_type != DialogType::FILE)
+	{
+		if (isVisible())
+			this->hide();
+	}
 }
 
 void PlayerDialog::paintEvent(QPaintEvent *event)
 {
 	QPainter painter(this);
-	painter.fillRect(rect(), QColor(255, 255, 255, 150));
+	painter.fillRect(rect(), QColor(255, 255, 255, 100));
+	event->accept();
 }
 
 void PlayerDialog::volColorChangedSlot(QString color)

@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
 	video.show();
 
 	//“Ù¿÷≤•∑≈∆˜
-	GLMusicPlayer music;
-	music.show();
+	/*GLMusicPlayer music;
+	music.show();*/
 
 	return a.exec();
 }

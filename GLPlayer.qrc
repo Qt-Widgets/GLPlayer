@@ -4,6 +4,7 @@
         <file>Resources/Font Awesome 5 Free-Regular-400.otf</file>
         <file>Resources/Font Awesome 5 Free-Solid-900.otf</file>
         <file>Resources/Federant-Regular.ttf</file>
+        <file>Resources/NotoSansSC-Regular.otf</file>
     </qresource>
     <qresource prefix="/images">
         <file>Resources/music.jpg</file>

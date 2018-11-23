@@ -25,7 +25,8 @@ namespace LabelButtonType
 		TAKEPHON,
 		SHARE,
 		EXPAND,
-		DROPPER
+		DROPPER,
+		OPENFILE
 	};
 }
 

@@ -10,6 +10,7 @@ IconFontHelper::IconFontHelper(QObject*) : QObject(qApp)
 	fontId = QFontDatabase::addApplicationFont(":/fonts/Resources/Font Awesome 5 Free-Regular-400.otf");
 	fontId = QFontDatabase::addApplicationFont(":/fonts/Resources/Font Awesome 5 Brands-Regular-400.otf");
 	fontId = QFontDatabase::addApplicationFont(":/fonts/Resources/Federant-Regular.ttf");
+	fontId = QFontDatabase::addApplicationFont(":/fonts/Resources/NotoSansSC-Regular.otf");
 }
 
 IconFontHelper*IconFontHelper::_instance = nullptr;

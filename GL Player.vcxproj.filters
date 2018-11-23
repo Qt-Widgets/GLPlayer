@@ -38,6 +38,12 @@
     <ClCompile Include="GLPlaySlider.cpp">
       <Filter>Source Files\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="OpenFileDialog.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerListDialog.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -71,6 +77,12 @@
     </Filter>
     <Filter Include="Source Files\Uitls">
       <UniqueIdentifier>{11d5d94c-c37c-403b-af9d-8d1760e50dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Dialog">
+      <UniqueIdentifier>{2bc9aa42-791a-40dc-9432-dcb1130be8ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Dialog">
+      <UniqueIdentifier>{a902f4f5-3053-4fc2-a84d-f0d274270b0a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -110,11 +122,12 @@
     <QtMoc Include="GLPlaySlider.h">
       <Filter>Header Files\Widgets</Filter>
     </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="GLPlayer.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
+    <QtMoc Include="OpenFileDialog.h">
+      <Filter>Header Files\Dialog</Filter>
+    </QtMoc>
+    <QtMoc Include="PlayerListDialog.h">
+      <Filter>Header Files\Dialog</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="GLPlayer.qrc">

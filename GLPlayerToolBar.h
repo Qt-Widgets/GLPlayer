@@ -58,5 +58,6 @@ private:
 	//¶Ô»°¿ò
 	PlayerDialog *color_dialog = nullptr;
 	PlayerDialog *vol_dialog = nullptr;
+	PlayerDialog *open_file = nullptr;
 
 };

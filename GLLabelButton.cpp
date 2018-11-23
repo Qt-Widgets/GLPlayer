@@ -85,6 +85,9 @@ void GLLabelButton::setType(LabelButtonType::Type type, int size)
 	case LabelButtonType::DROPPER:
 		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf1fb), size);
 		break;
+	case LabelButtonType::OPENFILE:
+		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf07c), size);
+		break;
 	}
 }
 

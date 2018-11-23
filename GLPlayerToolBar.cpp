@@ -59,7 +59,9 @@ GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 
 	color_dialog = new PlayerDialog(DialogType::COLOR, this);
 	vol_dialog = new PlayerDialog(DialogType::VOL, this);
+	open_file = new PlayerDialog(DialogType::FILE, this);
 
+	//色盘选择器单击事件
 	connect(btn_dropper, &GLLabelButton::clicked, this, [=]() 
 	{
 			
@@ -73,23 +75,24 @@ GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 		else
 			color_dialog->hide();
 		
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, lab_time, &GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_dropper, &GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_expand,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_volume,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_setting,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_next,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_faster,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_stop,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_play,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_slower,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_previous,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_open,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, btn_list,&GLLabelButton::colorChangedSlot);
-		connect(color_dialog, &PlayerDialog::colorChangedSignal, vol_dialog, &PlayerDialog::volColorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, lab_time, &GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_dropper, &GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_expand,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_volume,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_setting,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_next,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_faster,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_stop,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_play,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_slower,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_previous,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_open,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, btn_list,&GLLabelButton::colorChangedSlot);
+		connect(color_dialog, &PlayerDialog::color_changed_signal, vol_dialog, &PlayerDialog::volColorChangedSlot);
 
 	});
 
+	//播放按钮单击事件
 	connect(btn_play, &GLLabelButton::clicked, this, [=]() 
 	{
 		
@@ -121,6 +124,7 @@ GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 
 	});
 
+	//音量按钮点击事件
 	connect(btn_volume, &GLLabelButton::clicked, this, [=]() 
 	{
 	
@@ -134,6 +138,12 @@ GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 		else
 			vol_dialog->hide();
 
+	});
+
+	//打开文件按钮点击事件
+	connect(btn_open, &GLLabelButton::clicked, this, [=]() {
+		if (open_file && !open_file->isVisible())
+			open_file->show();
 	});
 }
 
@@ -228,5 +238,10 @@ GLPlayerToolBar::~GLPlayerToolBar()
 	{
 		delete vol_dialog;
 		vol_dialog = nullptr;
+	}
+	if (open_file)
+	{
+		delete open_file;
+		open_file = nullptr;
 	}
 }
