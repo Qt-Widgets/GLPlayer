@@ -3,12 +3,14 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include "ListItemWidget.h"
 
 class GLLabelButton;
 class SVColorArea;
 class HColorArea;
 class GLPlaySlider;
 class OpenFileDialog;
+class PlayerListDialog;
 
 namespace DialogType 
 {
@@ -52,9 +54,16 @@ signals:
 	//文件选择器
 	void file_select_signal(QString path, bool isLoca, bool isVideo);
 
+	//列表控制信号
+	void next_play_signal();		//下一首
+	void previous_play_signal();	//上一首
+	void stop_signal();				//停止
+	void start_signal(QString path, PlayList::VideoType type);			//开始信号
+
 public slots:
 	//改变声音控制slider颜色
 	void volColorChangedSlot(QString color);
+	void volume_changed_slot(int);
 
 private:
 	DialogType::Type m_type;
@@ -75,4 +84,6 @@ private:
 	//文件选择器
 	OpenFileDialog *file_dialog = nullptr;
 
+	//列表对话框
+	PlayerListDialog *play_list = nullptr;
 };

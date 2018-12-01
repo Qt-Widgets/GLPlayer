@@ -8,6 +8,7 @@
 #include "GLPlaySlider.h"
 #include "GLLabelButton.h"
 #include "OpenFileDialog.h"
+#include "PlayerListDialog.h"
 
 PlayerDialog::PlayerDialog(DialogType::Type type, QWidget *parent) : QDialog(parent)
 {
@@ -83,6 +84,13 @@ PlayerDialog::~PlayerDialog()
 		delete file_dialog;
 		file_dialog = nullptr;
 	}
+
+	//列表对话框
+	if (play_list)
+	{
+		delete play_list;
+		play_list = nullptr;
+	}
 }
 
 void PlayerDialog::ColorDialog()
@@ -120,8 +128,7 @@ void PlayerDialog::VolDialog()
 	g_layout->setMargin(5);
 
 	slider = new GLPlaySlider(Qt::Orientation::Vertical, this);
-	slider->setMaximum(200);
-	
+	slider->setMaximum(100);
 
 	lab_vol = new GLLabelButton(LabelButtonType::LABEL,this);
 	lab_vol->setText("000");
@@ -149,17 +156,28 @@ void PlayerDialog::FileDialog()
 	h_layout->addWidget(file_dialog);
 	this->setLayout(h_layout);
 
-	connect(file_dialog, &OpenFileDialog::OpenFile_Signal, this, &PlayerDialog::color_changed_signal);
+	connect(file_dialog, &OpenFileDialog::OpenFile_Signal, this, &PlayerDialog::file_select_signal);
 }
 
 void PlayerDialog::ListDialog()
 {
+	this->resize(QSize(376, 500));
 
+	h_layout = new QHBoxLayout(this);
+	play_list = new PlayerListDialog(this);
+	h_layout->addWidget(play_list);
+	h_layout->setSpacing(0);
+	this->setLayout(h_layout);
+
+	connect(this, &PlayerDialog::next_play_signal, play_list, &PlayerListDialog::next_play_slot);
+	connect(this, &PlayerDialog::previous_play_signal, play_list, &PlayerListDialog::previous_play_slot);
+	connect(this, &PlayerDialog::stop_signal, play_list, &PlayerListDialog::stop_slot);
+	connect(play_list, &PlayerListDialog::start_play_signals, this, &PlayerDialog::start_signal);
 }
 
 void PlayerDialog::focusOutEvent(QFocusEvent *event)
 {
-	if (m_type != DialogType::FILE)
+	if (m_type != DialogType::FILE && m_type != DialogType::LIST)
 	{
 		if (isVisible())
 			this->hide();
@@ -179,4 +197,9 @@ void PlayerDialog::volColorChangedSlot(QString color)
 		slider->change_vertical_color(color);
 	if (lab_vol)
 		lab_vol->setStyleSheet(QString("color:%1").arg(color));
+}
+
+void PlayerDialog::volume_changed_slot(int val)
+{
+	slider->setValue(val);
 }

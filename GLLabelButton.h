@@ -26,7 +26,13 @@ namespace LabelButtonType
 		SHARE,
 		EXPAND,
 		DROPPER,
-		OPENFILE
+		OPENFILE,
+		//ÁÐ±íÄÚ
+		VIDEO,
+		AUDIO,
+		DEL,
+		ADD,
+		LOCAL
 	};
 }
 

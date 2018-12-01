@@ -11,9 +11,6 @@
     <ClCompile Include="SVColorArea.cpp">
       <Filter>Source Files\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerDialog.cpp">
-      <Filter>Source Files\Uitls</Filter>
-    </ClCompile>
     <ClCompile Include="IconFontHelper.cpp">
       <Filter>Source Files\Uitls</Filter>
     </ClCompile>
@@ -41,7 +38,13 @@
     <ClCompile Include="OpenFileDialog.cpp">
       <Filter>Source Files\Dialog</Filter>
     </ClCompile>
+    <ClCompile Include="ListItemWidget.cpp">
+      <Filter>Source Files\Widgets</Filter>
+    </ClCompile>
     <ClCompile Include="PlayerListDialog.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerDialog.cpp">
       <Filter>Source Files\Dialog</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,9 +98,6 @@
     <QtMoc Include="SVColorArea.h">
       <Filter>Header Files\Widgets</Filter>
     </QtMoc>
-    <QtMoc Include="PlayerDialog.h">
-      <Filter>Header Files\Uitls</Filter>
-    </QtMoc>
     <QtMoc Include="IconFontHelper.h">
       <Filter>Header Files\Uitls</Filter>
     </QtMoc>
@@ -125,7 +125,13 @@
     <QtMoc Include="OpenFileDialog.h">
       <Filter>Header Files\Dialog</Filter>
     </QtMoc>
+    <QtMoc Include="ListItemWidget.h">
+      <Filter>Header Files\Widgets</Filter>
+    </QtMoc>
     <QtMoc Include="PlayerListDialog.h">
+      <Filter>Header Files\Dialog</Filter>
+    </QtMoc>
+    <QtMoc Include="PlayerDialog.h">
       <Filter>Header Files\Dialog</Filter>
     </QtMoc>
   </ItemGroup>

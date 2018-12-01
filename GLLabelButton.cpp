@@ -6,13 +6,17 @@ GLLabelButton::GLLabelButton(LabelButtonType::Type type, QWidget *parent, int si
 	this->m_type = type;
 	setType(m_type, size);
 
-	if (type != LabelButtonType::LABEL)
+	if (type != LabelButtonType::LABEL && 
+		type != LabelButtonType::AUDIO && 
+		type != LabelButtonType::VIDEO &&
+		type != LabelButtonType::LOCAL)
 	{
 		setMinimumSize(50, 50);
 		setMaximumSize(50, 50);
 	}
+	if (type != LabelButtonType::OPENFILE)
+		setStyleSheet("color:#ffffff;");
 
-	//setStyleSheet("QLabel{border:2px solid #000000;}");
 }
 
 void GLLabelButton::setType(LabelButtonType::Type type, int size)
@@ -83,10 +87,25 @@ void GLLabelButton::setType(LabelButtonType::Type type, int size)
 		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf065), size);
 		break;
 	case LabelButtonType::DROPPER:
-		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf1fb), size);
+		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf53f), size);
 		break;
 	case LabelButtonType::OPENFILE:
 		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf07c), size);
+		break;
+	case LabelButtonType::AUDIO:
+		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf3b5), size);
+		break;
+	case LabelButtonType::VIDEO:
+		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf1c8), size);
+		break;
+	case LabelButtonType::DEL:
+		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf2ed), size);
+		break;
+	case LabelButtonType::ADD:
+		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf067), size);
+		break;
+	case LabelButtonType::LOCAL:
+		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf192), size);
 		break;
 	}
 }
