@@ -35,7 +35,7 @@ signals:
 	void faster_clicked_signal();						//快放按钮单击事件
 	void next_clicked_signal(QString path);				//下一首按钮单击事件
 	//void setting_clicked_signal();			//设置按钮单击事件
-	//void expand_clicked_signal();				//全拼按钮单击事件
+	void expand_clicked_signal();				//全拼按钮单击事件
 
 public slots:
 	//void play_time_slot(QString total, QString now);

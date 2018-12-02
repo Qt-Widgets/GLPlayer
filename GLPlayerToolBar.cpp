@@ -25,6 +25,8 @@ GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 	//°´Å¥¿Ø¼þ
 	lab_time = new GLLabelButton(LabelButtonType::LABEL, this,12);
 	lab_time->setText(QString("%1/%2").arg("00:00:00").arg("00:00:00"));
+	lab_time->setMinimumWidth(105);
+
 	btn_list = new GLLabelButton(LabelButtonType::LIST, this);
 	btn_open = new GLLabelButton(LabelButtonType::OPEN, this);
 	btn_previous = new GLLabelButton(LabelButtonType::PREVIOUS, this);
@@ -33,7 +35,7 @@ GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 	btn_stop = new GLLabelButton(LabelButtonType::STOP, this);
 	btn_faster = new GLLabelButton(LabelButtonType::FASTER, this);
 	btn_next = new GLLabelButton(LabelButtonType::NETXT, this);
-	btn_setting = new GLLabelButton(LabelButtonType::SETTING, this);
+	//btn_setting = new GLLabelButton(LabelButtonType::SETTING, this);
 	btn_volume = new GLLabelButton(LabelButtonType::VOL_DOWN, this);
 	btn_expand = new GLLabelButton(LabelButtonType::EXPAND, this);
 	btn_dropper = new GLLabelButton(LabelButtonType::DROPPER, this);
@@ -50,7 +52,7 @@ GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 	h_layout->addWidget(btn_next);
 	h_layout->addStretch();
 	h_layout->addWidget(btn_dropper);
-	h_layout->addWidget(btn_setting);
+	//h_layout->addWidget(btn_setting);
 	h_layout->addWidget(btn_volume);
 	h_layout->addWidget(btn_expand);
 	h_layout->setContentsMargins(10, 0, 10, 0);
@@ -79,6 +81,8 @@ GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 	connect(progress_bar, &GLPlaySlider::valueChanged, this, &GLPlayerToolBar::progress_changed_signal);
 	connect(progress_bar, &GLPlaySlider::sliderMoved, this, &GLPlayerToolBar::progress_move_signal);
 	connect(progress_bar, &GLPlaySlider::sliderPressed, this, &GLPlayerToolBar::progress_pressed_signal);
+
+	connect(btn_expand, &GLLabelButton::clicked, this, &GLPlayerToolBar::expand_clicked_signal);
 
 	connect(open_file, &PlayerDialog::file_select_signal, this, [=](QString path, bool isLoca, bool isVideo)
 	{
@@ -293,12 +297,12 @@ GLPlayerToolBar::~GLPlayerToolBar()
 	if (h_layout)
 	{
 		delete h_layout;
-		btn_expand = nullptr;
+		h_layout = nullptr;
 	}
 	if (v_layout)
 	{
 		delete v_layout;
-		btn_expand = nullptr;
+		v_layout = nullptr;
 	}
 	if (color_dialog)
 	{
@@ -337,7 +341,8 @@ void GLPlayerToolBar::show_time_out_slot(qint64 mss)
 void GLPlayerToolBar::paintEvent(QPaintEvent *event)
 {
 	QPainter painter(this);
-	painter.fillRect(event->rect(), QBrush(QColor(0, 0, 0)));
+	painter.fillRect(event->rect(), QBrush(QColor(255,255,255,100)));//0, 0, 0
+	update();
 }
 
 QString GLPlayerToolBar::transform_msec(qint64 mss)

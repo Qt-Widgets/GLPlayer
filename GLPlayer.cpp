@@ -16,24 +16,21 @@ GLPlayer::GLPlayer(QWidget *parent)
 
 	m_unit = 1000;
 	m_player = new QtAV::AVPlayer(this);
-	m_vo = new QtAV::VideoOutput(this);
+	m_vo = new QtAV::WidgetRenderer(this);
 	m_player->setRenderer(m_vo);
-
+	
 	v_layout = new QVBoxLayout(this);
 	v_layout->setSpacing(0);
 	v_layout->setMargin(0);
 	/*add widgets code*/
-	/*QLabel *lab = new QLabel(this);
-	lab->setStyleSheet("QLabel{border:2px solid #000000;}");*/
-	v_layout->addWidget(m_vo->widget());
+	v_layout->addWidget(m_vo);
 
 	h_layout = new QHBoxLayout;
-	/*add widgets code*/
 	tool_bar = new GLPlayerToolBar(this);
 	h_layout->addWidget(tool_bar);
 
-	v_layout->setStretchFactor(m_vo->widget(), 1);
-	v_layout->setStretchFactor(tool_bar, 2);
+	v_layout->setStretchFactor(h_layout, 1);
+	v_layout->setStretchFactor(m_vo, 2);
 	v_layout->addLayout(h_layout);
 	setLayout(v_layout);
 
@@ -53,6 +50,7 @@ GLPlayer::GLPlayer(QWidget *parent)
 	connect(tool_bar, SIGNAL(progress_pressed_signal()), this, SLOT(progress_move_slot()));
 	connect(m_player, SIGNAL(positionChanged(qint64)), SLOT(update_slider(qint64)));
 	connect(m_player, SIGNAL(started()), SLOT(update_slider()));
+	connect(tool_bar, &GLPlayerToolBar::expand_clicked_signal, this, &GLPlayer::expand_clicked_slot);
 }
 
 GLPlayer::~GLPlayer()
@@ -127,6 +125,18 @@ void GLPlayer::next_clicked_slot(QString path)
 	m_player->play(path);
 }
 
+void GLPlayer::expand_clicked_slot()
+{
+	if (!this->isFullScreen())
+	{
+		this->showFullScreen();
+	}
+	else
+	{
+		this->showNormal();
+	}
+}
+
 void GLPlayer::progress_move_slot(int val)
 {
 	if (!m_player->isPlaying())
@@ -160,3 +170,4 @@ void GLPlayer::update_slider_unit()
 	m_unit = m_player->notifyInterval();
 	update_slider();
 }
+

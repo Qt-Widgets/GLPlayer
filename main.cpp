@@ -2,7 +2,6 @@
 #include <QtAVWidgets/QtAVWidgets>
 #include "GLPlayer.h"
 #include "GLMusicPlayer.h"
-#include <PlayerListDialog.h>
 
 int main(int argc, char *argv[])
 {
