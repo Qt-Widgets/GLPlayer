@@ -1,6 +1,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QLabel>
+#include <QDragEnterEvent>
+#include <QMimeData>
+#include <QFileInfo>
 #include "GLPlayer.h"
 #include "GLPlaySlider.h"
 #include "GLPlayerToolBar.h"
@@ -10,27 +12,29 @@ GLPlayer::GLPlayer(QWidget *parent)
 {
 	setAttribute(Qt::WA_TranslucentBackground);
 	setAutoFillBackground(true);
-	setWindowFlags(Qt::FramelessWindowHint);
-	
+	//setWindowFlags(Qt::FramelessWindowHint);
+
+	this->setWindowTitle(u8"GL Player - 呐，做人呢，最重要的就是开心。");
 	this->setMinimumSize(820, 550);
+	setAcceptDrops(true);
 
 	m_unit = 1000;
 	m_player = new QtAV::AVPlayer(this);
-	m_vo = new QtAV::WidgetRenderer(this);
+	m_vo = new QtAV::GLWidgetRenderer2(this);
 	m_player->setRenderer(m_vo);
 	
 	v_layout = new QVBoxLayout(this);
 	v_layout->setSpacing(0);
 	v_layout->setMargin(0);
 	/*add widgets code*/
-	v_layout->addWidget(m_vo);
+	v_layout->addWidget(m_vo->widget());
 
 	h_layout = new QHBoxLayout;
 	tool_bar = new GLPlayerToolBar(this);
 	h_layout->addWidget(tool_bar);
 
 	v_layout->setStretchFactor(h_layout, 1);
-	v_layout->setStretchFactor(m_vo, 2);
+	v_layout->setStretchFactor(m_vo->widget(), 2);
 	v_layout->addLayout(h_layout);
 	setLayout(v_layout);
 
@@ -55,6 +59,16 @@ GLPlayer::GLPlayer(QWidget *parent)
 
 GLPlayer::~GLPlayer()
 {
+	if (m_player)
+	{
+		delete m_player;
+		m_player = nullptr;
+	}
+	if (m_vo)
+	{
+		delete m_vo;
+		m_vo = nullptr;
+	}
 	if (tool_bar)
 	{
 		delete tool_bar;
@@ -84,34 +98,15 @@ void GLPlayer::previous_clicked_slot(QString path)
 	m_player->play(path);
 }
 
+void GLPlayer::next_clicked_slot(QString path)
+{
+	m_player->play(path);
+}
+
 void GLPlayer::slower_clicked_slot()
 {
-	if (speed > 0.5)
-		speed -= 0.5;
+	speed -= 0.5;
 	m_player->setSpeed(speed);
-}
-
-void GLPlayer::play_clicked_slot(QString path)
-{
-	switch (m_player->state())
-	{
-	case QtAV::AVPlayer::StoppedState:
-		m_player->play(path);
-		emit volume_change_signal(m_player->audio()->volume());
-		break;
-	case QtAV::AVPlayer::PlayingState:
-			m_player->pause(true);
-		break;
-	case QtAV::AVPlayer::PausedState:
-			m_player->pause(false);
-		break;
-	}
-}
-
-void GLPlayer::stop_clicked_slot()
-{
-	if (m_player)
-		m_player->stop();
 }
 
 void GLPlayer::faster_clicked_slot()
@@ -120,20 +115,53 @@ void GLPlayer::faster_clicked_slot()
 	m_player->setSpeed(speed);
 }
 
-void GLPlayer::next_clicked_slot(QString path)
+void GLPlayer::play_clicked_slot(QString path)
 {
-	m_player->play(path);
+	QFileInfo info(path);
+
+	switch (m_player->state())
+	{
+	case QtAV::AVPlayer::StoppedState:
+		m_player->play(path);
+		this->setWindowTitle(info.fileName());
+		emit volume_change_signal(m_player->audio()->volume());
+		break;
+	case QtAV::AVPlayer::PlayingState:
+		m_player->pause(true);
+		break;
+	case QtAV::AVPlayer::PausedState:
+		m_player->pause(false);
+		break;
+	}
+}
+
+void GLPlayer::stop_clicked_slot()
+{
+	if (m_player)
+		m_player->stop();
+	this->setWindowTitle(u8"GL Player - 呐，做人呢，最重要的就是开心。");
 }
 
 void GLPlayer::expand_clicked_slot()
 {
 	if (!this->isFullScreen())
 	{
+		size.setWidth(this->width());
+		size.setHeight(this->height());
 		this->showFullScreen();
+		tool_bar->setFullScreen(true);
+		h_layout->removeWidget(tool_bar);
+		tool_bar->setParent(m_vo->widget());
+		tool_bar->show();
 	}
 	else
 	{
+		tool_bar->setFullScreen(false);
+		h_layout->addWidget(tool_bar);
+		tool_bar->setParent(this);
+		tool_bar->show();
 		this->showNormal();
+		this->resize(size);
 	}
 }
 
@@ -171,3 +199,20 @@ void GLPlayer::update_slider_unit()
 	update_slider();
 }
 
+void GLPlayer::dragEnterEvent(QDragEnterEvent *event)
+{
+	if (event->mimeData()->hasUrls())
+		event->acceptProposedAction();
+	else
+		event->ignore();
+}
+
+void GLPlayer::dropEvent(QDropEvent *event)
+{
+	const QMimeData *mimeData = event->mimeData();
+	if (mimeData->hasUrls())
+	{
+		QList<QUrl> urlList = mimeData->urls();
+		tool_bar->played_slot(urlList.at(0).toLocalFile());
+	}
+}

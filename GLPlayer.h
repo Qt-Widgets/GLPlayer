@@ -1,11 +1,13 @@
 #pragma once
 #include <QWidget>
 #include <QtAV/QtAV>
-#include <QtAVWidgets/WidgetRenderer.h>
+#include <QtAVWidgets/QtAVWidgets>
 
 class QVBoxLayout;
 class QHBoxLayout;
 class GLPlayerToolBar;
+
+#define MARGIN 20//四个角的长度
 
 class GLPlayer : public QWidget
 {
@@ -37,14 +39,25 @@ public slots:
 	void update_slider();
 	void update_slider_unit();
 
+protected:
+	/*int countFlag(QPoint p, int row);
+	void setCursorType(int flag);
+	int countRow(QPoint p);
+	void mousePressEvent(QMouseEvent *event);
+	void mouseReleaseEvent(QMouseEvent *event);
+	void mouseDoubleClickEvent(QMouseEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);*/
+	void dragEnterEvent(QDragEnterEvent *event);
+	void dropEvent(QDropEvent *event);
 private:
 	QVBoxLayout *v_layout = nullptr;
 	QHBoxLayout *h_layout = nullptr;
 	GLPlayerToolBar *tool_bar = nullptr;
 
-	QtAV::WidgetRenderer *m_vo = nullptr;
+	QtAV::GLWidgetRenderer2 *m_vo = nullptr;
 	QtAV::AVPlayer *m_player = nullptr;
 	int m_unit = 0;
 	int m_slider_value = 0;
 	double speed = 0;
+	QSize size;
 };

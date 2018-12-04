@@ -20,6 +20,10 @@ public:
 	{
 		return this->progress_bar;
 	}
+	inline void setFullScreen(bool b)
+	{
+		this->isFullScreen = b;
+	}
 signals:
 	void progress_changed_signal(int val);		//进度条改变信号
 	void progress_move_signal(int val);			//进度条拖动
@@ -39,6 +43,7 @@ signals:
 
 public slots:
 	//void play_time_slot(QString total, QString now);
+	void played_slot(QString path);
 	void volume_changed_slot(int);
 	void update_time_slot(qint64);
 	void show_time_out_slot(qint64);
@@ -49,6 +54,8 @@ protected:
 
 private:
 	QString transform_msec(qint64 mss);
+
+	bool isFullScreen = false;
 
 	//音视频地址
 	QString m_path;

@@ -39,6 +39,8 @@ PlayerListDialog::PlayerListDialog(QWidget *parent) : QWidget(parent)
 	loca = new GLLabelButton(LabelButtonType::LOCAL, this);		//未释放
 	btn_layout2->addWidget(edit);
 	btn_layout2->addWidget(loca);
+	btn_layout2->setSpacing(0);
+	btn_layout2->setContentsMargins(0, 0, 0, 10);
 
 	list_widget = new QListWidget(this);
 	list_widget->setAcceptDrops(true);
@@ -51,7 +53,13 @@ PlayerListDialog::PlayerListDialog(QWidget *parent) : QWidget(parent)
 	btn_layout->addStretch();
 	btn_layout->addWidget(add_item);
 	btn_layout->addWidget(del_item);
+	btn_layout->setSpacing(0);
+	btn_layout->setMargin(0);
 
+	h_layout->setSpacing(0);
+	h_layout->setMargin(0);
+	v_layout->setSpacing(0);
+	v_layout->setMargin(0);
 	v_layout->addLayout(btn_layout2);
 	v_layout->addLayout(h_layout);
 	v_layout->addLayout(btn_layout);
@@ -107,14 +115,7 @@ void PlayerListDialog::add_item_slot()
 	QStringList path_list = QFileDialog::getOpenFileNames(this, u8"添加文件", "/",filter);
 
 	for each (QString path in path_list)
-	{
-		QFileInfo info(path);
-		if (audio.indexOf(info.suffix()) != -1)
-			add_list_item(path, PlayList::AUDIO);
-
-		if (video.indexOf(info.suffix()) != -1)
-			add_list_item(path, PlayList::VIDEO);
-	}
+		add_list_item(path);
 
 }
 
@@ -176,8 +177,10 @@ void PlayerListDialog::stop_slot()
 		list_widget->item(i)->setSizeHint(QSize(0, 30));
 }
 
-void PlayerListDialog::add_list_item(QString path, PlayList::VideoType type)
+void PlayerListDialog::add_list_item(QString path)
 {
+	QFileInfo file(path);
+
 	//去重
 	auto i = items.constBegin();
 	while (i != items.constEnd())
@@ -187,11 +190,20 @@ void PlayerListDialog::add_list_item(QString path, PlayList::VideoType type)
 		i++;
 	}
 
-	ListItemWidget *widget = new ListItemWidget(path, type, list_widget);
-	QListWidgetItem *listitem = new QListWidgetItem(list_widget);
-	list_widget->addItem(listitem);
-	list_widget->setItemWidget(listitem, widget);
-	listitem->setSizeHint(QSize(0, 30));
+	ListItemWidget *widget = nullptr;
+	if (audio.indexOf(file.suffix()) != -1)
+		widget = new ListItemWidget(path, PlayList::AUDIO, list_widget);
+
+	if (video.indexOf(file.suffix()) != -1)
+		widget = new ListItemWidget(path, PlayList::VIDEO, list_widget);
+
+	if (widget)
+	{
+		QListWidgetItem *listitem = new QListWidgetItem(list_widget);
+		list_widget->addItem(listitem);
+		list_widget->setItemWidget(listitem, widget);
+		listitem->setSizeHint(QSize(0, 30));
+	}
 }
 
 void PlayerListDialog::item_double_clicked(QListWidgetItem *item)
@@ -279,22 +291,10 @@ void PlayerListDialog::dropEvent(QDropEvent *event)
 			{
 				QFileInfoList file_list = GetFileList(url.toLocalFile());
 				for each (QFileInfo file in file_list)
-				{
-					if (audio.indexOf(file.suffix()) != -1)
-						add_list_item(file.absoluteFilePath(), PlayList::AUDIO);
-
-					if (video.indexOf(file.suffix()) != -1)
-						add_list_item(file.absoluteFilePath(), PlayList::VIDEO);
-				}
+					add_list_item(file.absoluteFilePath());
 			}
 			else
-			{
-				if (audio.indexOf(file_info.suffix()) != -1)
-					add_list_item(file_info.absoluteFilePath(), PlayList::AUDIO);
-
-				if (video.indexOf(file_info.suffix()) != -1)
-					add_list_item(file_info.absoluteFilePath(), PlayList::VIDEO);
-			}
+				add_list_item(file_info.absoluteFilePath());
 		}
 	}
 }

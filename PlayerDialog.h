@@ -64,6 +64,7 @@ public slots:
 	//改变声音控制slider颜色
 	void volColorChangedSlot(QString color);
 	void volume_changed_slot(int);
+	void add_list_item_slot(QString path);
 
 private:
 	DialogType::Type m_type;

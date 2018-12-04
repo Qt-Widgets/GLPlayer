@@ -203,3 +203,9 @@ void PlayerDialog::volume_changed_slot(int val)
 {
 	slider->setValue(val);
 }
+
+void PlayerDialog::add_list_item_slot(QString path)
+{
+	play_list->add_list_item(path);
+}
+

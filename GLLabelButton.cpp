@@ -105,7 +105,7 @@ void GLLabelButton::setType(LabelButtonType::Type type, int size)
 		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf067), size);
 		break;
 	case LabelButtonType::LOCAL:
-		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf192), size);
+		IconFontHelper::Instance()->SetFontID(2)->SetIcon(this, QChar(0xf50a), size);
 		break;
 	}
 }

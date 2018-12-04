@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPainter>
@@ -91,6 +92,8 @@ GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 		
 		btn_play->setType(LabelButtonType::PUSE);
 		m_path = path;
+
+		list_dialog->add_list_item_slot(m_path);
 		emit stop_clicked_signal();
 		emit play_clicked_signal(path);
 	});
@@ -321,6 +324,15 @@ GLPlayerToolBar::~GLPlayerToolBar()
 	}
 }
 
+void GLPlayerToolBar::played_slot(QString path)
+{
+	this->m_path = path;
+	btn_play->setType(LabelButtonType::PUSE);
+	
+	list_dialog->add_list_item_slot(m_path);
+	emit play_clicked_signal(m_path);
+}
+
 void GLPlayerToolBar::volume_changed_slot(int vol)
 {
 	vol_dialog->volume_changed_slot(vol);
@@ -341,7 +353,10 @@ void GLPlayerToolBar::show_time_out_slot(qint64 mss)
 void GLPlayerToolBar::paintEvent(QPaintEvent *event)
 {
 	QPainter painter(this);
-	painter.fillRect(event->rect(), QBrush(QColor(255,255,255,100)));//0, 0, 0
+	if (isFullScreen)
+		painter.fillRect(event->rect(), QBrush(QColor(255, 255, 255, 0)));
+	else
+		painter.fillRect(event->rect(), QBrush(QColor(0, 0, 0)));
 	update();
 }
 

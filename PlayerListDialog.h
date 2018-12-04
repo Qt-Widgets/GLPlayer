@@ -33,8 +33,9 @@ public slots:
 	void next_play_slot();		//下一首
 	void previous_play_slot();	//上一首
 	void stop_slot();			//停止
-	void add_list_item(QString path, PlayList::VideoType type);//添加
+	void add_list_item(QString path);//添加
 	void item_double_clicked(QListWidgetItem *item);
+	
 private:
 	QList<QFileInfo> GetFileList(QString path);
 
