@@ -1,5 +1,7 @@
 #include <QFile>
 #include <QLabel>
+#include <QEvent>
+#include <QMouseEvent>
 #include "GLPlaySlider.h"
 #include "IconFontHelper.h"
 
@@ -46,6 +48,19 @@ void GLPlaySlider::change_vertical_color(QString add_page)
 	case Qt::Vertical:
 		setStyleSheet(v_qss.join("").arg(add_page));
 		break;
+	}
+}
+
+void GLPlaySlider::mousePressEvent(QMouseEvent *ev)
+{
+	_super::mousePressEvent(ev);
+	if (this->orientation == Qt::Horizontal)
+	{
+		double pos = ev->pos().x() / (double)width();
+		setValue(pos * (maximum() - minimum()) + minimum());
+		QEvent evEvent(static_cast<QEvent::Type>(QEvent::User + 1));
+		QCoreApplication::sendEvent(parentWidget(), &evEvent);
+		emit progress_clicked_signal(pos * (maximum() - minimum()) + minimum());
 	}
 }
 

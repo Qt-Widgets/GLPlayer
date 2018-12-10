@@ -1,3 +1,4 @@
+#include <QFont>
 #include "GLLabelButton.h"
 #include "IconFontHelper.h"
 
@@ -51,7 +52,7 @@ void GLLabelButton::setType(LabelButtonType::Type type, int size)
 		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf051), size);
 		break;
 	case LabelButtonType::SETTING:
-		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf013), size);
+		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf141), size);
 		break;
 	case LabelButtonType::VOL:
 		IconFontHelper::Instance()->SetFontID(0)->SetIcon(this, QChar(0xf028), size);
@@ -132,7 +133,7 @@ void GLLabelButton::enterEvent(QEvent *event)
 void GLLabelButton::leaveEvent(QEvent *event)
 {
 	QPalette palette;
-	palette.setColor(QPalette::Background, QColor(0, 0, 0,0));
+	palette.setColor(QPalette::Background, QColor(0, 0, 0, 0));
 	setAutoFillBackground(true);
 	setPalette(palette);
 }
@@ -140,4 +141,6 @@ void GLLabelButton::leaveEvent(QEvent *event)
 void GLLabelButton::colorChangedSlot(QString colorName)
 {
 	this->setStyleSheet(QString("color:%1").arg(colorName));
+	update();
+	leaveEvent(nullptr);
 }

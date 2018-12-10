@@ -2,7 +2,9 @@
 #include <QWidget>
 #include <QtAV/QtAV>
 #include <QtAVWidgets/QtAVWidgets>
+#include <QtAV/private/PlayerSubtitle.h>
 
+class QTimer;
 class QVBoxLayout;
 class QHBoxLayout;
 class GLPlayerToolBar;
@@ -39,25 +41,26 @@ public slots:
 	void update_slider();
 	void update_slider_unit();
 
+	void time_out();
+
 protected:
-	/*int countFlag(QPoint p, int row);
-	void setCursorType(int flag);
-	int countRow(QPoint p);
-	void mousePressEvent(QMouseEvent *event);
-	void mouseReleaseEvent(QMouseEvent *event);
-	void mouseDoubleClickEvent(QMouseEvent *event);
-	void mouseMoveEvent(QMouseEvent *event);*/
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dropEvent(QDropEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
+	void moveEvent(QMoveEvent *event);
+	void keyPressEvent(QKeyEvent *event);
+	void mouseDoubleClickEvent(QMouseEvent *event);
+
 private:
+	QTimer *timer = nullptr;
 	QVBoxLayout *v_layout = nullptr;
 	QHBoxLayout *h_layout = nullptr;
 	GLPlayerToolBar *tool_bar = nullptr;
 
+	//QtAV::PlayerSubtitle *play_subtitle = nullptr;
 	QtAV::GLWidgetRenderer2 *m_vo = nullptr;
 	QtAV::AVPlayer *m_player = nullptr;
 	int m_unit = 0;
 	int m_slider_value = 0;
-	double speed = 0;
 	QSize size;
 };

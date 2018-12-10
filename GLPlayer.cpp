@@ -1,28 +1,38 @@
-#include <QVBoxLayout>
+ï»¿#include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QFileInfo>
+#include <QFileDialog>
+#include <QTimer>
+#include <QMouseEvent>
+#include <QMoveEvent>
+#include <QKeyEvent>
 #include "GLPlayer.h"
 #include "GLPlaySlider.h"
 #include "GLPlayerToolBar.h"
 
-GLPlayer::GLPlayer(QWidget *parent)
-	: QWidget(parent)
+#include <QDebug>
+
+GLPlayer::GLPlayer(QWidget *parent) : QWidget(parent)
 {
 	setAttribute(Qt::WA_TranslucentBackground);
 	setAutoFillBackground(true);
 	//setWindowFlags(Qt::FramelessWindowHint);
 
-	this->setWindowTitle(u8"GL Player - ÄÅ£¬×öÈËÄØ£¬×îÖØÒªµÄ¾ÍÊÇ¿ªÐÄ¡£");
-	this->setMinimumSize(820, 550);
+	this->setWindowTitle(u8"GL Player - å‘ï¼Œåšäººå‘¢ï¼Œæœ€é‡è¦çš„å°±æ˜¯å¼€å¿ƒã€‚");
+	this->setMinimumSize(1100, 620);
 	setAcceptDrops(true);
+	setMouseTracking(true);
 
 	m_unit = 1000;
 	m_player = new QtAV::AVPlayer(this);
 	m_vo = new QtAV::GLWidgetRenderer2(this);
+	//play_subtitle = new QtAV::PlayerSubtitle(this);
+	///play_subtitle->setPlayer(m_player);
 	m_player->setRenderer(m_vo);
-	
+	m_vo->setMouseTracking(true);
+
 	v_layout = new QVBoxLayout(this);
 	v_layout->setSpacing(0);
 	v_layout->setMargin(0);
@@ -31,12 +41,17 @@ GLPlayer::GLPlayer(QWidget *parent)
 
 	h_layout = new QHBoxLayout;
 	tool_bar = new GLPlayerToolBar(this);
+	tool_bar->setMouseTracking(true);
 	h_layout->addWidget(tool_bar);
 
 	v_layout->setStretchFactor(h_layout, 1);
 	v_layout->setStretchFactor(m_vo->widget(), 2);
 	v_layout->addLayout(h_layout);
 	setLayout(v_layout);
+
+	timer = new QTimer(this);
+	connect(timer, &QTimer::timeout, this, &GLPlayer::time_out);
+	timer->setInterval(3000);
 
 	connect(tool_bar, &GLPlayerToolBar::progress_changed_signal, this, &GLPlayer::progress_changed_slot);
 	connect(tool_bar, &GLPlayerToolBar::volume_changed_signal, this, &GLPlayer::volume_changed_slot);
@@ -55,6 +70,19 @@ GLPlayer::GLPlayer(QWidget *parent)
 	connect(m_player, SIGNAL(positionChanged(qint64)), SLOT(update_slider(qint64)));
 	connect(m_player, SIGNAL(started()), SLOT(update_slider()));
 	connect(tool_bar, &GLPlayerToolBar::expand_clicked_signal, this, &GLPlayer::expand_clicked_slot);
+
+	connect(tool_bar, &GLPlayerToolBar::setting_clicked_signal, this, [=]() 
+	{
+		//QString subtitle_file = QFileDialog::getOpenFileName(this, u8"é€‰æ‹©å­—å¹•æ–‡ä»¶", "/");
+		//if (m_player->isPlaying())
+			//play_subtitle->setFile(subtitle_file);
+	});
+
+	connect(tool_bar, &GLPlayerToolBar::progress_clicked_signal, this, [=](int val) 
+	{
+		if (m_player->isPlaying())
+			m_player->seek(qint64(val*m_unit));
+	});
 }
 
 GLPlayer::~GLPlayer()
@@ -74,7 +102,11 @@ GLPlayer::~GLPlayer()
 		delete tool_bar;
 		tool_bar = nullptr;
 	}
-
+	if (timer)
+	{
+		delete timer;
+		timer = nullptr;
+	}
 	if (h_layout)
 	{
 		delete h_layout;
@@ -105,14 +137,14 @@ void GLPlayer::next_clicked_slot(QString path)
 
 void GLPlayer::slower_clicked_slot()
 {
-	speed -= 0.5;
-	m_player->setSpeed(speed);
+	if (m_player->isPlaying())
+		m_player->seek(m_player->position() - 10000);
 }
 
 void GLPlayer::faster_clicked_slot()
 {
-	speed += 0.5;
-	m_player->setSpeed(speed);
+	if (m_player->isPlaying())
+		m_player->seek(m_player->position() + 10000);
 }
 
 void GLPlayer::play_clicked_slot(QString path)
@@ -139,7 +171,7 @@ void GLPlayer::stop_clicked_slot()
 {
 	if (m_player)
 		m_player->stop();
-	this->setWindowTitle(u8"GL Player - ÄÅ£¬×öÈËÄØ£¬×îÖØÒªµÄ¾ÍÊÇ¿ªÐÄ¡£");
+	this->setWindowTitle(u8"GL Player - å‘ï¼Œåšäººå‘¢ï¼Œæœ€é‡è¦çš„å°±æ˜¯å¼€å¿ƒã€‚");
 }
 
 void GLPlayer::expand_clicked_slot()
@@ -153,6 +185,8 @@ void GLPlayer::expand_clicked_slot()
 		h_layout->removeWidget(tool_bar);
 		tool_bar->setParent(m_vo->widget());
 		tool_bar->show();
+		if (!timer->isActive())
+			timer->start();
 	}
 	else
 	{
@@ -162,6 +196,8 @@ void GLPlayer::expand_clicked_slot()
 		tool_bar->show();
 		this->showNormal();
 		this->resize(size);
+		if (timer->isActive())
+			timer->stop();
 	}
 }
 
@@ -199,6 +235,16 @@ void GLPlayer::update_slider_unit()
 	update_slider();
 }
 
+void GLPlayer::time_out()
+{
+	if (this->isFullScreen())
+	{
+		this->setCursor(Qt::BlankCursor);
+		if (tool_bar->isVisible())
+			tool_bar->hide();
+	}
+}
+
 void GLPlayer::dragEnterEvent(QDragEnterEvent *event)
 {
 	if (event->mimeData()->hasUrls())
@@ -216,3 +262,80 @@ void GLPlayer::dropEvent(QDropEvent *event)
 		tool_bar->played_slot(urlList.at(0).toLocalFile());
 	}
 }
+
+void GLPlayer::mouseMoveEvent(QMouseEvent *event)
+{
+	this->setCursor(Qt::ArrowCursor);
+	QPoint point = event->pos();
+
+	if (point.y() > tool_bar->y())
+	{
+		if (!tool_bar->isVisible())
+			tool_bar->show();
+		if (timer->isActive())
+			timer->stop();
+	}
+	else
+	{
+		if (!timer->isActive())
+			timer->start();
+	}
+}
+
+void GLPlayer::moveEvent(QMoveEvent *event)
+{
+	tool_bar->move_event(event);
+}
+
+void GLPlayer::keyPressEvent(QKeyEvent *event)
+{
+	switch (event->key())
+	{
+	case Qt::Key::Key_Escape:
+		if (this->isFullScreen())
+			expand_clicked_slot();
+		else
+		{
+			this->showMinimized();
+			switch (m_player->state())
+			{
+			case QtAV::AVPlayer::PlayingState:
+				m_player->pause(true);
+				tool_bar->toggle_pause();
+				break;
+			}
+		}
+		break;
+	case Qt::Key::Key_Space:
+		if (m_player->isPaused())
+		{
+			m_player->pause(false);
+			tool_bar->toggle_pause();
+		}
+		else
+		{
+			m_player->pause();
+			tool_bar->toggle_pause();
+		}
+		break;
+	case Qt::Key::Key_Left:
+		slower_clicked_slot();
+		break;
+	case Qt::Key::Key_Right:
+		faster_clicked_slot();
+		break;
+	case Qt::Key::Key_Up:
+		break;
+	case Qt::Key::Key_Down:
+		break;
+	}
+
+	QWidget::keyPressEvent(event);
+	event->accept();
+}
+
+void GLPlayer::mouseDoubleClickEvent(QMouseEvent *event)
+{
+	expand_clicked_slot();
+}
+

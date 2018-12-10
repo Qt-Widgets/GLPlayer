@@ -1,6 +1,7 @@
 #pragma once
 #include <QWidget>
 #include <QTimer>
+#include <GLLabelButton.h>
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -24,10 +25,23 @@ public:
 	{
 		this->isFullScreen = b;
 	}
+	inline void toggle_pause()
+	{
+		switch (btn_play->getType())
+		{
+		case LabelButtonType::Type::PLAY:
+			btn_play->setType(LabelButtonType::PUSE);
+			break;
+		case LabelButtonType::Type::PUSE:
+			btn_play->setType(LabelButtonType::PLAY);
+			break;
+		}
+	}
 signals:
 	void progress_changed_signal(int val);		//进度条改变信号
 	void progress_move_signal(int val);			//进度条拖动
 	void progress_pressed_signal();				//进度条按下
+	void progress_clicked_signal(int);
 
 	void volume_changed_signal(int val);		//音量条改变信号
 	//void list_clicked_signal();					//列表按钮单击事件
@@ -38,7 +52,7 @@ signals:
 	void stop_clicked_signal();							//停止按钮单击事件
 	void faster_clicked_signal();						//快放按钮单击事件
 	void next_clicked_signal(QString path);				//下一首按钮单击事件
-	//void setting_clicked_signal();			//设置按钮单击事件
+	void setting_clicked_signal();				//设置按钮单击事件
 	void expand_clicked_signal();				//全拼按钮单击事件
 
 public slots:
@@ -48,12 +62,20 @@ public slots:
 	void update_time_slot(qint64);
 	void show_time_out_slot(qint64);
 
+	inline void move_event(QMoveEvent *event)
+	{
+		this->moveEvent(event);
+	}
+
 protected:
 	//重绘事件
 	void paintEvent(QPaintEvent *);
+	void moveEvent(QMoveEvent *event);
 
 private:
 	QString transform_msec(qint64 mss);
+
+	QWidget *m_parent = nullptr;
 
 	bool isFullScreen = false;
 

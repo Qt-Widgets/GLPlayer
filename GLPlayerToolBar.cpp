@@ -3,16 +3,17 @@
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QMoveEvent>
 #include "GLPlaySlider.h"
 #include "GLLabelButton.h"
 #include "PlayerDialog.h"
 #include "GLPlayerToolBar.h"
 #include "PlayerListDialog.h"
 #include "ListItemWidget.h"
-#include "GLLabelButton.h"
 
 GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 {
+	m_parent = parent;
 	v_layout = new QVBoxLayout(this);
 	v_layout->setSpacing(0);
 	v_layout->setMargin(0);
@@ -79,9 +80,12 @@ GLPlayerToolBar::GLPlayerToolBar(QWidget *parent) : QWidget(parent)
 	connect(btn_faster, &GLLabelButton::clicked, this, &GLPlayerToolBar::faster_clicked_signal);
 	connect(btn_slower, &GLLabelButton::clicked, this, &GLPlayerToolBar::slower_clicked_signal);
 
+	connect(btn_setting, &GLLabelButton::clicked, this, &GLPlayerToolBar::setting_clicked_signal);
+
 	connect(progress_bar, &GLPlaySlider::valueChanged, this, &GLPlayerToolBar::progress_changed_signal);
 	connect(progress_bar, &GLPlaySlider::sliderMoved, this, &GLPlayerToolBar::progress_move_signal);
 	connect(progress_bar, &GLPlaySlider::sliderPressed, this, &GLPlayerToolBar::progress_pressed_signal);
+	connect(progress_bar, &GLPlaySlider::progress_clicked_signal, this, &GLPlayerToolBar::progress_clicked_signal);
 
 	connect(btn_expand, &GLLabelButton::clicked, this, &GLPlayerToolBar::expand_clicked_signal);
 
@@ -358,6 +362,21 @@ void GLPlayerToolBar::paintEvent(QPaintEvent *event)
 	else
 		painter.fillRect(event->rect(), QBrush(QColor(0, 0, 0)));
 	update();
+}
+
+void GLPlayerToolBar::moveEvent(QMoveEvent *event)
+{
+	if (list_dialog->isVisible())
+	{
+		QPoint point = QPoint(this->mapToGlobal(btn_list->pos()).x() - list_dialog->width() / 4, this->mapToGlobal(btn_list->pos()).y() - list_dialog->height());
+		list_dialog->move(point);
+	}
+
+	if (open_file->isVisible())
+	{
+		//Î»ÖÃÒÆ¶¯
+		open_file->move(m_parent->x() + m_parent->width() / 2 - open_file->width() / 2, m_parent->y() + m_parent->height() / 2 - open_file->height() / 2);
+	}
 }
 
 QString GLPlayerToolBar::transform_msec(qint64 mss)

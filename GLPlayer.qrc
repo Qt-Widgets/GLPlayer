@@ -8,5 +8,6 @@
     </qresource>
     <qresource prefix="/images">
         <file>Resources/music.jpg</file>
+        <file>Resources/favicon.ico</file>
     </qresource>
 </RCC>

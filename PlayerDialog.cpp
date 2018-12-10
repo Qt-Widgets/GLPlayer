@@ -1,6 +1,7 @@
 #include <QPainter>
 #include <QFont>
 #include <QPaintEvent>
+#include <QMoveEvent>
 #include "IconFontHelper.h"
 #include "SVColorArea.h"
 #include "HColorArea.h"
@@ -128,7 +129,7 @@ void PlayerDialog::VolDialog()
 	g_layout->setMargin(5);
 
 	slider = new GLPlaySlider(Qt::Orientation::Vertical, this);
-	slider->setMaximum(100);
+	//slider->setMaximum(100);
 
 	lab_vol = new GLLabelButton(LabelButtonType::LABEL,this);
 	lab_vol->setText("000");

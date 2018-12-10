@@ -5,6 +5,9 @@
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
+
+	a.setWindowIcon(QIcon(":/images/Resources/favicon.ico"));
+
 	//ÊÓÆµ²¥·ÅÆ÷
 	GLPlayer video;
 	video.show();
@@ -12,9 +15,6 @@ int main(int argc, char *argv[])
 	//ÒôÀÖ²¥·ÅÆ÷
 	/*GLMusicPlayer music;
 	music.show();*/
-
-	/*PlayerListDialog dlg;
-	dlg.show();*/
 
 	return a.exec();
 }

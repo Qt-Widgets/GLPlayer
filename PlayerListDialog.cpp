@@ -20,6 +20,7 @@ PlayerListDialog::PlayerListDialog(QWidget *parent) : QWidget(parent)
 {
 	setAttribute(Qt::WA_TranslucentBackground);
 	setWindowFlags(Qt::FramelessWindowHint);
+	setAttribute(Qt::WA_AlwaysShowToolTips);
 	
 	setAcceptDrops(true);
 
@@ -33,23 +34,29 @@ PlayerListDialog::PlayerListDialog(QWidget *parent) : QWidget(parent)
 
 	btn_layout2 = new QHBoxLayout;
 	QLineEdit *edit = new QLineEdit(this);		//未释放
+	
 	edit->setPlaceholderText(u8"输入文件名称筛选");
 	edit->setStyleSheet("QLineEdit{ background-color: rgba(255,240,255,120); }QLineEdit:focus{background-color: rgb(255,255,255)}");
 	
-	loca = new GLLabelButton(LabelButtonType::LOCAL, this);		//未释放
+	loca = new GLLabelButton(LabelButtonType::LOCAL, this);
+	//loca->setToolTip(u8"快速定位到当前播放项");
+
 	btn_layout2->addWidget(edit);
 	btn_layout2->addWidget(loca);
 	btn_layout2->setSpacing(0);
 	btn_layout2->setContentsMargins(0, 0, 0, 10);
 
 	list_widget = new QListWidget(this);
+	list_widget->setFocusProxy(parent);
 	list_widget->setAcceptDrops(true);
 	list_widget->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	h_layout->addWidget(list_widget);
 
 	btn_layout = new QHBoxLayout;
 	add_item = new GLLabelButton(LabelButtonType::ADD, this);
+	
 	del_item = new GLLabelButton(LabelButtonType::DEL, this);
+	
 	btn_layout->addStretch();
 	btn_layout->addWidget(add_item);
 	btn_layout->addWidget(del_item);
@@ -203,6 +210,7 @@ void PlayerListDialog::add_list_item(QString path)
 		list_widget->addItem(listitem);
 		list_widget->setItemWidget(listitem, widget);
 		listitem->setSizeHint(QSize(0, 30));
+		list_widget->setItemSelected(listitem, true);
 	}
 }
 
@@ -237,6 +245,12 @@ PlayerListDialog::~PlayerListDialog()
 {
 	if (items.count() != 0)
 		items.clear();
+
+	if (loca)
+	{
+		delete loca;
+		loca = nullptr;
+	}
 
 	if (add_item)
 	{
